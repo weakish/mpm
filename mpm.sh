@@ -16,7 +16,7 @@
 
 # Versions
 
-semver=0.3 # Released on 2011-04
+semver=0.3.0 # Released on 2011-04
 # - Use plain text record file again:
 #   Encryption, if needed, can be done at file system level
 #   seperately, for example, a fuse file system
