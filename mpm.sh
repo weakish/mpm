@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# (c) 2009-2011 Jakukyo Friel <weakish@gmail.com>
+# (c) 2009-2012 Jakukyo Friel <weakish@gmail.com>
 # under GPL v2
 
 ## Minalistic password manager 
@@ -14,9 +14,14 @@
 
 #    example http://example.org password additional notes
 
+# Requires Python3
+
 # Versions
 
-semver=0.3.0 # Released on 2011-04
+semver=0.4 # Released on 2012-02
+# improve password strength
+
+# semver=0.3.0 # Released on 2011-04
 # - Use plain text record file again:
 #   Encryption, if needed, can be done at file system level
 #   seperately, for example, a fuse file system
@@ -38,17 +43,15 @@ local pattern=$1
 grep -E "$pattern" $mpmrc
 }
 
-# By default, we use length 10, about as secure as a 59bit key
-# ( log((26*2+10)**10)/log(2) ).  Well, distribute.net has cracked a 
-# AES 64bit key, so you may use a longer password.
+# inspired by http://xkcd.com/936/
 genRandomPass() {
-local len=$1
-dd if=/dev/urandom count=1 2>/dev/null |
-uuencode -m - |
-head -n 2 | tail -n 1 | cut -c -${len:-10} |
-sed -e 's/[^[:alnum:]]//g'
+python3 << END
+import random
+wordlist = open('/usr/share/dict/words').readlines()
+pick = lambda : random.choice(wordlist)
+for i in range(4): print(pick().replace('\'', '').strip(), end='')
+END
 }
-
 
 
 addRecord() {
