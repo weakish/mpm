@@ -18,10 +18,13 @@
 
 # Versions
 
+# semver=0.4.1 # Released in future
+# - quoted here-documents to avoid shell expansion.
+
 semver=0.4 # Released on 2012-02
 # improve password strength
 
-# semver=0.3.0 # Released on 2011-04
+# semver=0.3 # Released on 2011-04
 # - Use plain text record file again:
 #   Encryption, if needed, can be done at file system level
 #   seperately, for example, a fuse file system
@@ -45,7 +48,7 @@ grep -E "$pattern" $mpmrc
 
 # inspired by http://xkcd.com/936/
 genRandomPass() {
-python3 << END
+python3 <<'END'
 import random
 wordlist = open('/usr/share/dict/words').readlines()
 pick = lambda : random.choice(wordlist)
