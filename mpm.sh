@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# (c) 2009-2012 Jakukyo Friel <weakish@gmail.com>
+# (c) 2009-2013 Jakukyo Friel <weakish@gmail.com>
 # under GPL v2
 
 ## Minalistic password manager 
@@ -18,10 +18,12 @@
 
 # Versions
 
-# semver=0.4.1 # Released in future
+semver=0.5 # Released on 2013-02
 # - quoted here-documents to avoid shell expansion.
+# - improve password strength
+# - encrypt the record file via gpg (again)
 
-semver=0.4 # Released on 2012-02
+# semver=0.4 # Released on 2012-02
 # improve password strength
 
 # semver=0.3 # Released on 2011-04
@@ -39,20 +41,35 @@ semver=0.4 # Released on 2012-02
 
 
 # The record file
-mpmrc=$HOME/.mpmrc
+mpmrc=$HOME/.mpmrc.gpg
+
+
+decryptRecord() {
+  gpg --quiet --yes -d $1
+}
+
+encryptRecord() {
+  gpg --quiet --yes --output $mpmrc -r `whoami` -e $1 &&
+  shred $1
+}
 
 searchRecord() {
-local pattern=$1
-grep -E "$pattern" $mpmrc
+  local pattern=$1
+  decryptRecord $mpmrc |
+  grep -E "$pattern"
 }
 
 # inspired by http://xkcd.com/936/
+# But I use 5 words instead of 4, since 5 words will achieve an entropy of:
+#     log(99171)/log(2)*5 = 82.988
+# This is enough.
+# NIST recommends 80-bits for the most secure passwords.
 genRandomPass() {
 python3 <<'END'
 import random
 wordlist = open('/usr/share/dict/words').readlines()
 pick = lambda : random.choice(wordlist)
-for i in range(4): print(pick().replace('\'', '').strip(), end='')
+for i in range(5): print(pick().replace('\'', '').strip(), end='')
 END
 }
 
@@ -62,7 +79,9 @@ local pw=`mpm -g`
 local site=$1
 local url=$2
 shift 2
-echo "$site $url $pw $*" >> $mpmrc
+decryptRecord $mpmrc > $mpmrc.nc &&
+echo "$site $url $pw $*" >> $mpmrc.nc &&
+encryptRecord $mpmrc.nc &&
 echo $pw
 }
 
@@ -83,7 +102,7 @@ options:
 -s pattern    search records
 
 files: 
-~/.mpmrc    record file
+~/.mpmrc.gpg    record file encrypted via gpg with your public key
 END
 }
 
