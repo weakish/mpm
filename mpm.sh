@@ -18,7 +18,7 @@
 
 # Versions
 
-#semver=0.6.0 # Released on 2014-11
+semver=0.6.0 # Released on 2014-11
 # - No temporary decrypted record file on disk.
 
 #semver=0.5 # Released on 2013-02
@@ -66,7 +66,8 @@ searchRecord() {
 #     log(99171)/log(2)*5 = 82.988
 # This is enough.
 # NIST recommends 80-bits for the most secure passwords.
-genRandomPass() {
+# And it roughly needs 6 billions USD to break.
+generateRandomPass() {
 python3 <<'END'
 import random
 wordlist = open('/usr/share/dict/words').readlines()
@@ -76,7 +77,7 @@ END
 }
 
 addRecord() {
-local pw=`mpm -g`
+local pw=`mpm -g` # Not generateRandomPass since it is in Python.
 local site=$1
 local url=$2
 shift 2
@@ -109,7 +110,7 @@ END
 case $1 in
     -V) echo 'mpm Minimalistic password manager' $semver;;
     -h) printHelp;;
-    -g) genRandomPass $2;;
+    -g) generateRandomPass $2;;
     -s) searchRecord $2;;
     *) addRecord $*;;
 esac
