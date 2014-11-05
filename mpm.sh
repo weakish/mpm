@@ -3,7 +3,7 @@
 # (c) 2009-2013 Jakukyo Friel <weakish@gmail.com>
 # under GPL v2
 
-## Minalistic password manager 
+## Minimalistic password manager 
 
 # I use a simple plain text file to store password for websites.
 
@@ -14,7 +14,7 @@
 
 #    example http://example.org password additional notes
 
-# Requires Python3
+# Requires Python 3
 
 # Versions
 
@@ -29,8 +29,8 @@ semver=0.5 # Released on 2013-02
 # semver=0.3 # Released on 2011-04
 # - Use plain text record file again:
 #   Encryption, if needed, can be done at file system level
-#   seperately, for example, a fuse file system
-# - Use space instead of comma to seperate fields in record
+#   separately, for example, a fuse file system
+# - Use space instead of comma to separate fields in record
 #   file, since comma is allowed in URL
 # - addRecord(): remove option '-e' from echo for sh compatibility
 
