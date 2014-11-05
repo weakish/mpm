@@ -18,7 +18,10 @@
 
 # Versions
 
-semver=0.5 # Released on 2013-02
+#semver=0.6.0 # Released on 2014-11
+# - No temporary decrypted record file on disk.
+
+#semver=0.5 # Released on 2013-02
 # - quoted here-documents to avoid shell expansion.
 # - improve password strength
 # - encrypt the record file via gpg (again)
@@ -45,12 +48,11 @@ mpmrc=$HOME/.mpmrc.gpg
 
 
 decryptRecord() {
-  gpg --quiet --yes -d $1
+  gpg --quiet --yes --decrypt $1
 }
 
 encryptRecord() {
-  gpg --quiet --yes --output $mpmrc -r `whoami` -e $1 &&
-  shred $1
+  gpg --quiet --yes --output $mpmrc -r `whoami` --encrypt
 }
 
 searchRecord() {
@@ -73,19 +75,16 @@ for i in range(5): print(pick().replace('\'', '').strip(), end='')
 END
 }
 
-
 addRecord() {
 local pw=`mpm -g`
 local site=$1
 local url=$2
 shift 2
-decryptRecord $mpmrc > $mpmrc.nc &&
-echo "$site $url $pw $*" >> $mpmrc.nc &&
-encryptRecord $mpmrc.nc &&
+{ decryptRecord $mpmrc;
+echo "$site $url $pw $*"; } |
+encryptRecord
 echo $pw
 }
-
-
 
 printHelp() {
 cat <<END
@@ -114,4 +113,3 @@ case $1 in
     -s) searchRecord $2;;
     *) addRecord $*;;
 esac
-
