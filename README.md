@@ -11,7 +11,7 @@ Copy `mpm.sh` to your `$PATH`.
 See `mpm -h`:
 
 ```
-; mpm -h                                                                                                                   ➜  /m/w/p/m/mpm (master) ✗ 
+; mpm -h
 mpm site url [note ...]
 Add a new password record with generated random password.
 And print the record to stdout.
@@ -25,7 +25,7 @@ options:
 -s pattern    search records
 
 files: 
-~/.mpmrc.gpg    record file encrypted via gpg with your public key
+~/.mpmrc.gpg    record file encrypted via gpg with your public key                                                  
 ```
 
 ## Contribute
