@@ -24,8 +24,8 @@ options:
 -g N          generate a random password with length N (default 10)
 -s pattern    search records
 
-files: 
-~/.mpmrc.gpg    record file encrypted via gpg with your public key                                                  
+files:
+~/.mpmrc.gpg    record file encrypted via gpg with your public key
 ```
 
 ## Contribute

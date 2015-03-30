@@ -3,7 +3,7 @@
 # (c) 2009-2013 Jakukyo Friel <weakish@gmail.com>
 # under GPL v2
 
-## Minimalistic password manager 
+## Minimalistic password manager
 
 # I use a simple plain text file to store password for websites.
 
@@ -18,30 +18,7 @@
 
 # Versions
 
-semver=0.6.0 # Released on 2014-11
-# - No temporary decrypted record file on disk.
-
-#semver=0.5 # Released on 2013-02
-# - quoted here-documents to avoid shell expansion.
-# - improve password strength
-# - encrypt the record file via gpg (again)
-
-# semver=0.4 # Released on 2012-02
-# improve password strength
-
-# semver=0.3 # Released on 2011-04
-# - Use plain text record file again:
-#   Encryption, if needed, can be done at file system level
-#   separately, for example, a fuse file system
-# - Use space instead of comma to separate fields in record
-#   file, since comma is allowed in URL
-# - addRecord(): remove option '-e' from echo for sh compatibility
-
-# semver=0.2 # Released on 2009-08
-# - Use gpg to encrypt the record file
-
-# semver=0.1 # Released on 2009-08
-
+semver=0.6.1
 
 # The record file
 mpmrc=$HOME/.mpmrc.gpg
@@ -70,6 +47,10 @@ searchRecord() {
 generateRandomPass() {
 python3 <<'END'
 import random
+import unicodedata
+def strip_accents(s):
+  return ''.join(c for c in unicodedata.normalize('NFD', s)
+    if not unicodedata.combining(c))
 wordlist = open('/usr/share/dict/words').readlines()
 pick = lambda : random.choice(wordlist)
 for i in range(5): print(pick().replace('\'', '').strip(), end='')
@@ -101,7 +82,7 @@ options:
 -g N          generate a random password with length N (default 10)
 -s pattern    search records
 
-files: 
+files:
 ~/.mpmrc.gpg    record file encrypted via gpg with your public key
 END
 }
